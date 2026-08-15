@@ -99,10 +99,6 @@
       animation: rise-left var(--settle) 0.34s both;
     }
 
-    .bg__layer.is-active {
-      animation: fade 900ms ease both;
-    }
-
     .bg {
       position: fixed;
       inset: 0;
@@ -124,17 +120,36 @@
       opacity: 1;
     }
 
+    /* 10 Background Images CSS */
     .bg__layer--1 {
       background-image: url("https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?q=80&w=1600&auto=format&fit=crop");
     }
-
     .bg__layer--2 {
-      background-position: center 38%;
       background-image: url("https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=1600&auto=format&fit=crop");
     }
-
-    .bg__layer--2.is-armed {
-      opacity: 0;
+    .bg__layer--3 {
+      background-image: url("https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1600&auto=format&fit=crop");
+    }
+    .bg__layer--4 {
+      background-image: url("https://images.unsplash.com/photo-1469474968028-56623f02e42e?q=80&w=1600&auto=format&fit=crop");
+    }
+    .bg__layer--5 {
+      background-image: url("https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=80&w=1600&auto=format&fit=crop");
+    }
+    .bg__layer--6 {
+      background-image: url("https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1600&auto=format&fit=crop");
+    }
+    .bg__layer--7 {
+      background-image: url("https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=1600&auto=format&fit=crop");
+    }
+    .bg__layer--8 {
+      background-image: url("https://images.unsplash.com/photo-1426604966848-d7adac902bff?q=80&w=1600&auto=format&fit=crop");
+    }
+    .bg__layer--9 {
+      background-image: url("https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?q=80&w=1600&auto=format&fit=crop");
+    }
+    .bg__layer--10 {
+      background-image: url("https://images.unsplash.com/photo-1454496522488-7a8e488e8606?q=80&w=1600&auto=format&fit=crop");
     }
 
     .bg__scrim {
@@ -840,10 +855,18 @@
 </head>
 <body>
 
-  <!-- Background Layer Stack -->
+  <!-- Background Layer Stack (10 Images) -->
   <div class="bg">
     <div class="bg__layer bg__layer--1 is-active"></div>
     <div class="bg__layer bg__layer--2"></div>
+    <div class="bg__layer bg__layer--3"></div>
+    <div class="bg__layer bg__layer--4"></div>
+    <div class="bg__layer bg__layer--5"></div>
+    <div class="bg__layer bg__layer--6"></div>
+    <div class="bg__layer bg__layer--7"></div>
+    <div class="bg__layer bg__layer--8"></div>
+    <div class="bg__layer bg__layer--9"></div>
+    <div class="bg__layer bg__layer--10"></div>
     <div class="bg__scrim"></div>
   </div>
 
@@ -1093,18 +1116,10 @@
     const bgLayers = [...document.querySelectorAll('.bg__layer')];
     let bgIndex = 0;
 
-    function deferSecondBackground() {
-      const arm = () => bgLayers.slice(1).forEach((l) => l.classList.add('is-armed'));
-      const idle = window.requestIdleCallback || ((fn) => setTimeout(fn, 1200));
-      if (document.readyState === 'complete') idle(arm);
-      else window.addEventListener('load', () => idle(arm), { once: true });
-    }
-
     function rotateBackground(to) {
-      if (bgLayers.length < 2) return;
+      if (bgLayers.length === 0) return;
       const n = bgLayers.length;
       bgIndex = (((to ?? bgIndex + 1) % n) + n) % n;
-      bgLayers[bgIndex].classList.add('is-armed');
       bgLayers.forEach((layer, i) => layer.classList.toggle('is-active', i === bgIndex));
     }
 
@@ -1118,7 +1133,7 @@
       const n = state.order.length;
       state.pos = ((newPos % n) + n) % n;
       renderTrack();
-      rotateBackground();
+      rotateBackground(); // गाना बदलते ही अगली बैकग्राउंड इमेज आ जाएगी
       if (!yt) return;
       state.started = true;
       yt.loadVideoById(currentTrack().id);
@@ -1276,7 +1291,6 @@
       const ctx = ensureAudio();
       if (!ctx) return;
       
-      // Synthesize custom horn sound effect safely via Web Audio API oscillator stack
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       osc.type = 'sawtooth';
@@ -1405,7 +1419,6 @@
       renderList();
       renderTrack();
       rotateBackground(0);
-      deferSecondBackground();
 
       const s = document.createElement('script');
       s.src = 'https://www.youtube.com/iframe_api';
