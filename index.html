@@ -3,86 +3,420 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Horn OK Please - Desi Highway Jukebox</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tiro+Devanagari+Hindi:ital@0;1&family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
+    <title>ट्रक वाला - Highway Desi Vibes</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tiro+Devanagari+Hindi:ital@0;1&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), 
-                        url('https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
-            background-size: cover;
-            color: #f4f4f4;
+        body, html {
+            width: 100%;
+            height: 100vh;
             font-family: 'Outfit', sans-serif;
-            min-height: 100vh;
+            overflow: hidden;
+            background-color: #000;
+        }
+
+        /* बैकग्राउंड ट्रक वाली इमेज और डार्क ओवरले */
+        .bg-container {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1000&q=80') no-repeat center center/cover;
+            filter: brightness(0.65) contrast(1.1);
+            z-index: -1;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(15, 23, 42, 0.85));
+            z-index: -1;
+        }
+
+        .app-container {
+            width: 100%;
+            height: 100%;
             display: flex;
             flex-direction: column;
+            justify-content: space-between;
             align-items: center;
+            padding: 30px 20px;
+            position: relative;
         }
-        header { text-align: center; padding: 20px 20px 10px; }
-        .truck-sign { background: #ffcc00; color: #000; padding: 8px 25px; border: 4px dashed #000; transform: rotate(-2deg); display: inline-block; }
-        .truck-sign h1 { font-family: 'Tiro Devanagari Hindi', serif; font-size: 2rem; font-weight: 900; text-transform: uppercase; }
-        .container { width: 100%; max-width: 500px; padding: 15px; }
-        
-        .video-container { position: relative; width: 100%; height: 230px; background: #000; border-radius: 12px; overflow: hidden; border: 3px solid #ffcc00; margin-bottom: 15px; }
-        .video-container iframe { width: 100%; height: 100%; }
 
-        .playlist-tabs { display: flex; gap: 5px; margin-bottom: 12px; }
-        .tab-btn { flex: 1; padding: 8px; background: #222; color: #aaa; border: 1px solid #444; border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: bold; }
-        .tab-btn.active { background: #ffcc00; color: #000; }
+        /* हेडिंग स्टाइल */
+        .main-title {
+            font-family: 'Tiro Devanagari Hindi', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 2px;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.6);
+            margin-top: 10px;
+        }
 
-        .playlist { background: rgba(0,0,0,0.9); border-radius: 10px; padding: 10px; max-height: 250px; overflow-y: auto; border: 1px solid #333; display: none; }
-        .playlist.active-list { display: block; }
-        
-        .playlist-item { padding: 8px; border-bottom: 1px solid #222; cursor: pointer; color: #ddd; font-size: 0.85rem; }
-        .playlist-item:hover { color: #ffcc00; background: #1a1a1a; }
-        ::-webkit-scrollbar { width: 4px; } ::-webkit-scrollbar-thumb { background: #444; }
+        .center-quote {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        /* प्लेलिस्ट ड्रावर (जो ऊपर खुलेगी) */
+        .playlist-drawer {
+            width: 100%;
+            max-width: 440px;
+            background: rgba(20, 20, 25, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-in-out, padding 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .playlist-drawer.open {
+            max-height: 280px;
+            padding: 12px;
+            margin-bottom: 15px;
+        }
+
+        .playlist-items {
+            max-height: 250px;
+            overflow-y: auto;
+        }
+
+        .playlist-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 12px;
+            font-size: 0.85rem;
+            color: #ccc;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+
+        .playlist-item:hover, .playlist-item.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .playlist-item span:last-child {
+            font-size: 0.75rem;
+            color: #888;
+        }
+
+        /* बॉटम फ्लोटिंग म्यूजिक प्लेयर (Glassmorphism Pill) */
+        .player-pill {
+            width: 100%;
+            max-width: 440px;
+            background: rgba(30, 30, 35, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 40px;
+            padding: 10px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+        }
+
+        .player-main {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .song-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .album-art {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid rgba(255,255,255,0.2);
+            animation: spin 8s linear infinite;
+            animation-play-state: paused;
+        }
+
+        .album-art.playing {
+            animation-play-state: running;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .song-details {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+        .song-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .song-artist {
+            font-size: 0.75rem;
+            color: #aaa;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* कंट्रोल्स बटन */
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .ctrl-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.1s;
+        }
+
+        .ctrl-btn:active { transform: scale(0.9); }
+
+        .play-pause-btn {
+            width: 36px;
+            height: 36px;
+            background: #fff;
+            color: #000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        /* प्रोग्रेस बार */
+        .progress-bar-container {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background: #fff;
+            border-radius: 2px;
+            position: relative;
+        }
+
+        .time-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.65rem;
+            color: #aaa;
+            padding: 0 2px;
+        }
+
+        /* स्क्रॉल बार कस्टमाइजेशन */
+        .playlist-items::-webkit-scrollbar { width: 4px; }
+        .playlist-items::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="truck-sign"><h1>Horn OK Please</h1></div>
-    </header>
+    <div class="bg-container"></div>
+    <div class="overlay"></div>
 
-    <div class="container">
-        <div class="video-container">
-            <iframe id="youtubePlayer" src="https://www.youtube.com/embed/xp5j2IHyTgs?enablejsapi=1" allowfullscreen></iframe>
+    <div class="app-container">
+        <!-- टॉप हेडिंग -->
+        <div>
+            <h1 class="main-title">ट्रक वाला</h1>
         </div>
 
-        <div class="playlist-tabs">
-            <button class="tab-btn active" onclick="switchList('list1', this)">1. Kumar Sanu Hits</button>
-            <button class="tab-btn" onclick="switchList('list2', this)">2. 90s Sadabahar</button>
+        <!-- बीच का टेक्स्ट/कोट -->
+        <div class="center-quote" id="quoteText">
+            "सर कटा सकते हैं लेकिन सर झुका सकते नहीं।" 🛞
         </div>
 
-        <!-- List 1 -->
-        <div id="list1" class="playlist active-list">
-            <div class="playlist-item" onclick="playSong('xp5j2IHyTgs', '0')">00:00 - Is Tarah Aashiqui Ka</div>
-            <div class="playlist-item" onclick="playSong('xp5j2IHyTgs', '438')">07:18 - Tujhe Na Dekhu Toh Chain</div>
-            <div class="playlist-item" onclick="playSong('xp5j2IHyTgs', '859')">14:19 - Hum Pyaar Hai Tumhare</div>
+        <!-- प्लेलिस्ट ड्रावर (स्क्रीनशॉट 2 जैसी लिस्ट) -->
+        <div class="playlist-drawer" id="playlistDrawer">
+            <div class="playlist-items" id="playlistItems">
+                <!-- गानों की लिस्ट जावास्क्रिप्ट से आएगी -->
+            </div>
         </div>
 
-        <!-- List 2: 90s Sadabahar -->
-        <div id="list2" class="playlist">
-            <div class="playlist-item" onclick="playSong('boj_mDaGVRg', '0')">00:00 - Milne Ki Tum Koshish</div>
-            <div class="playlist-item" onclick="playSong('boj_mDaGVRg', '358')">05:58 - Mera Sanam Sabse Pyara</div>
-            <div class="playlist-item" onclick="playSong('boj_mDaGVRg', '624')">10:24 - Teri Mohabbat Ne</div>
-            <div class="playlist-item" onclick="playSong('boj_mDaGVRg', '1415')">23:35 - Sona Kitna Sona Hai</div>
-            <div class="playlist-item" onclick="playSong('boj_mDaGVRg', '3154')">52:34 - Kitna Pyara Tujhe</div>
-            <div class="playlist-item" onclick="playSong('boj_mDaGVRg', '3531')">58:51 - Ghoonghat Ki Aad Se</div>
+        <!-- बॉटम फ्लोटिंग प्लेयर पिल (स्क्रीनशॉट 1 जैसी) -->
+        <div class="player-pill">
+            <div class="player-main">
+                <div class="song-info">
+                    <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=150&q=80" alt="Art" class="album-art" id="albumArt">
+                    <div class="song-details">
+                        <span class="song-title" id="songTitle">Is Pyar Se Meri Taraf Na Dekho</span>
+                        <span class="song-artist" id="songArtist">Kumar Sanu</span>
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <button class="ctrl-btn" onclick="prevSong()" title="Previous">⏮</button>
+                    <button class="ctrl-btn play-pause-btn" id="playPauseBtn" onclick="togglePlay()">▶</button>
+                    <button class="ctrl-btn" onclick="nextSong()" title="Next">⏭</button>
+                    <!-- प्लेलिस्ट टॉगल बटन (ड्रॉवर खोलने के लिए) -->
+                    <button class="ctrl-btn" onclick="togglePlaylist()" title="Playlist">☰</button>
+                </div>
+            </div>
+
+            <!-- प्रोग्रेस बार और टाइम -->
+            <div>
+                <div class="progress-bar-container" id="progressContainer" onclick="seekAudio(event)">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                <div class="time-info">
+                    <span id="currentTime">0:00</span>
+                    <span id="totalTime">5:10</span>
+                </div>
+            </div>
         </div>
     </div>
 
+    <!-- ऑडियो एलिमेंट (असली गाने प्ले करने के लिए) -->
+    <audio id="audioPlayer" src=""></audio>
+
     <script>
-        function playSong(videoId, startTime) {
-            const iframe = document.getElementById('youtubePlayer');
-            iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&start=${startTime}`;
+        // गानों की डेटा लिस्ट (आप इसमें और भी गाने जोड़ सकते हैं)
+        const songs = [
+            { title: "Is Pyar Se Meri Taraf Na Dekho", artist: "Kumar Sanu", duration: "5:10", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
+            { title: "Ab Tere Dil Mein To", artist: "Kumar Sanu & Alka Yagnik", duration: "4:45", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
+            { title: "Ae Mere Humsafar", artist: "Alka Yagnik & Udit Narayan", duration: "5:50", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" },
+            { title: "Woh Meri Neend Mera Chain", artist: "Sadhana Sargam", duration: "4:20", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" },
+            { title: "O Dil Tod Ke Hansti Ho Mera", artist: "Pop Chartbusters", duration: "5:05", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3" },
+            { title: "Sona Kitna Sona Hai", artist: "Udit Narayan & Poornima", duration: "4:30", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3" }
+        ];
+
+        let currentSongIndex = 0;
+        const audio = document.getElementById('audioPlayer');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const songTitleEl = document.getElementById('songTitle');
+        const songArtistEl = document.getElementById('songArtist');
+        const albumArt = document.getElementById('albumArt');
+        const progressBar = document.getElementById('progressBar');
+        const currentTimeEl = document.getElementById('currentTime');
+        const totalTimeEl = document.getElementById('totalTime');
+        const playlistDrawer = document.getElementById('playlistDrawer');
+        const playlistItemsEl = document.getElementById('playlistItems');
+
+        // प्लेलिस्ट आइटम्स जनरेट करना
+        function renderPlaylist() {
+            playlistItemsEl.innerHTML = '';
+            songs.forEach((song, index) => {
+                const item = document.createElement('div');
+                item.className = `playlist-item ${index === currentSongIndex ? 'active' : ''}`;
+                item.innerHTML = `<span>${index + 1}. ${song.title} - ${song.artist}</span><span>${song.duration}</span>`;
+                item.onclick = () => {
+                    currentSongIndex = index;
+                    loadSong(currentSongIndex);
+                    playAudio();
+                };
+                playlistItemsEl.appendChild(item);
+            });
         }
-        function switchList(listId, btnElement) {
-            document.querySelectorAll('.playlist').forEach(list => list.classList.remove('active-list'));
-            document.getElementById(listId).classList.add('active-list');
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            btnElement.classList.add('active');
+
+        function loadSong(index) {
+            const song = songs[index];
+            songTitleEl.innerText = song.title;
+            songArtistEl.innerText = song.artist;
+            totalTimeEl.innerText = song.duration;
+            audio.src = song.src;
+            renderPlaylist();
         }
+
+        function togglePlay() {
+            if (audio.paused) {
+                playAudio();
+            } else {
+                pauseAudio();
+            }
+        }
+
+        function playAudio() {
+            audio.play();
+            playPauseBtn.innerText = "⏸";
+            albumArt.classList.add('playing');
+        }
+
+        function pauseAudio() {
+            audio.pause();
+            playPauseBtn.innerText = "▶";
+            albumArt.classList.remove('playing');
+        }
+
+        function nextSong() {
+            currentSongIndex = (currentSongIndex + 1) % songs.length;
+            loadSong(currentSongIndex);
+            playAudio();
+        }
+
+        function prevSong() {
+            currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
+            loadSong(currentSongIndex);
+            playAudio();
+        }
+
+        function togglePlaylist() {
+            playlistDrawer.classList.toggle('open');
+        }
+
+        // प्रोग्रेस बार अपडेट करना
+        audio.ontimeupdate = () => {
+            if (audio.duration) {
+                const progressPercent = (audio.currentTime / audio.duration) * 100;
+                progressBar.style.width = progressPercent + '%';
+                
+                let mins = Math.floor(audio.currentTime / 60);
+                let secs = Math.floor(audio.currentTime % 60);
+                if (secs < 10) secs = '0' + secs;
+                currentTimeEl.innerText = `${mins}:${secs}`;
+            }
+        };
+
+        audio.onended = () => {
+            nextSong();
+        };
+
+        function seekAudio(e) {
+            const width = e.currentTarget.clientWidth;
+            const clickX = e.offsetX;
+            const duration = audio.duration;
+            if (duration) {
+                audio.currentTime = (clickX / width) * duration;
+            }
+        }
+
+        // इनिशियलाइज करें
+        loadSong(currentSongIndex);
     </script>
 </body>
 </html>
