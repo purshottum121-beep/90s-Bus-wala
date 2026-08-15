@@ -11,9 +11,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400..800&family=Yatra+One&display=swap" rel="stylesheet">
   
   <style>
-    /* ───────────────────────────────────────────────────────────── 90s Bus Wala
+    /* ───────────────────────────────────────────────────────────── Truck Wala
        The artwork carries all the colour. Everything the app draws
-       on top is neutral glass, so it sits on any background image.
+       on top is neutral glass, so it sits on any background video/image.
        ───────────────────────────────────────────────────────────── */
 
     :root {
@@ -81,11 +81,6 @@
       to { opacity: 1; transform: none; }
     }
 
-    @keyframes fade {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
     .topbar,
     .logo,
     .dock {
@@ -106,50 +101,13 @@
       background-color: #0a1416;
     }
 
-    .bg__layer {
+    /* Single Background Video Styling */
+    .bg__video {
       position: absolute;
       inset: 0;
-      background-size: cover;
-      background-repeat: no-repeat;
-      background-position: center;
-      opacity: 0;
-      transition: opacity 1.1s var(--ease-settle);
-    }
-
-    .bg__layer.is-active {
-      opacity: 1;
-    }
-
-    /* 10 Background Images CSS */
-    .bg__layer--1 {
-      background-image: url("https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?q=80&w=1600&auto=format&fit=crop");
-    }
-    .bg__layer--2 {
-      background-image: url("https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=1600&auto=format&fit=crop");
-    }
-    .bg__layer--3 {
-      background-image: url("https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1600&auto=format&fit=crop");
-    }
-    .bg__layer--4 {
-      background-image: url("https://images.unsplash.com/photo-1469474968028-56623f02e42e?q=80&w=1600&auto=format&fit=crop");
-    }
-    .bg__layer--5 {
-      background-image: url("https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=80&w=1600&auto=format&fit=crop");
-    }
-    .bg__layer--6 {
-      background-image: url("https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1600&auto=format&fit=crop");
-    }
-    .bg__layer--7 {
-      background-image: url("https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=1600&auto=format&fit=crop");
-    }
-    .bg__layer--8 {
-      background-image: url("https://images.unsplash.com/photo-1426604966848-d7adac902bff?q=80&w=1600&auto=format&fit=crop");
-    }
-    .bg__layer--9 {
-      background-image: url("https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?q=80&w=1600&auto=format&fit=crop");
-    }
-    .bg__layer--10 {
-      background-image: url("https://images.unsplash.com/photo-1454496522488-7a8e488e8606?q=80&w=1600&auto=format&fit=crop");
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
     .bg__scrim {
@@ -855,18 +813,12 @@
 </head>
 <body>
 
-  <!-- Background Layer Stack (10 Images) -->
+  <!-- Background Video Container -->
   <div class="bg">
-    <div class="bg__layer bg__layer--1 is-active"></div>
-    <div class="bg__layer bg__layer--2"></div>
-    <div class="bg__layer bg__layer--3"></div>
-    <div class="bg__layer bg__layer--4"></div>
-    <div class="bg__layer bg__layer--5"></div>
-    <div class="bg__layer bg__layer--6"></div>
-    <div class="bg__layer bg__layer--7"></div>
-    <div class="bg__layer bg__layer--8"></div>
-    <div class="bg__layer bg__layer--9"></div>
-    <div class="bg__layer bg__layer--10"></div>
+    <video class="bg__video" autoplay muted loop playsinline>
+      <source src="your-background-video.mp4" type="video/mp4">
+      आपका ब्राउज़र वीडियो टैग को सपोर्ट नहीं करता है।
+    </video>
     <div class="bg__scrim"></div>
   </div>
 
@@ -904,7 +856,7 @@
 
     <!-- Wordmark -->
     <h1 class="logo" id="logo">
-      <span class="logo__line">90s Bus</span>
+      <span class="logo__line">TRUCK</span>
       <span class="logo__line">WALA</span>
     </h1>
 
@@ -975,7 +927,6 @@
 
   <!-- Embedded Playlist & Logic Script -->
   <script>
-    // Embedded 90s Hits Playlist data
     const EMBEDDED_TRACKS = [
       { "id": "N0jnLZxYwYc", "title": "Mujhse Mohabbat Ka Izhaar Karta", "artist": "Satrang Music Official", "album": "Mujhse Mohabbat Ka Izhaar Karta - Single", "duration": 304, "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/d8/1f/fe/d81ffee2-15bd-5d17-7af0-a4794fa94547/cover.jpg/400x400bb.jpg", "rawTitle": "Mujhse Mohabbat Ka Izhaar (HD)| Hum Hain Rahi Pyar Ke (1993)| Aamir Khan| Juhi Chawla| Romantic Song" },
       { "id": "3NWMK2MRqIk", "title": "Tumsa Koi Pyaara", "artist": "Kumar Sanu & Alka Yagnik", "album": "Khuddar (Original Motion Picture Soundtrack)", "duration": 376, "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/a7/f5/c2/a7f5c2e5-d620-02de-4b50-8cc03364e246/8901854010462.jpg/400x400bb.jpg", "rawTitle": "Tumsa Koi Pyaara | Khuddar | Govinda, Karisma Kapoor | Kumar Sanu, Alka Yagnik |Anu Malik, 90s Hits" },
@@ -1113,16 +1064,6 @@
       });
     }
 
-    const bgLayers = [...document.querySelectorAll('.bg__layer')];
-    let bgIndex = 0;
-
-    function rotateBackground(to) {
-      if (bgLayers.length === 0) return;
-      const n = bgLayers.length;
-      bgIndex = (((to ?? bgIndex + 1) % n) + n) % n;
-      bgLayers.forEach((layer, i) => layer.classList.toggle('is-active', i === bgIndex));
-    }
-
     function renderPlaying(on) {
       state.playing = on;
       el.player.classList.toggle('is-playing', on);
@@ -1133,7 +1074,6 @@
       const n = state.order.length;
       state.pos = ((newPos % n) + n) % n;
       renderTrack();
-      rotateBackground(); // गाना बदलते ही अगली बैकग्राउंड इमेज आ जाएगी
       if (!yt) return;
       state.started = true;
       yt.loadVideoById(currentTrack().id);
@@ -1418,7 +1358,6 @@
       state.order = buildOrder();
       renderList();
       renderTrack();
-      rotateBackground(0);
 
       const s = document.createElement('script');
       s.src = 'https://www.youtube.com/iframe_api';
