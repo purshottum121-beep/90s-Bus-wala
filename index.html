@@ -17,7 +17,6 @@
             overflow-x: hidden;
         }
 
-        /* बैकग्राउंड इमेज जो मोबाइल और डेस्कटॉप दोनों पर परफेक्ट फिट होगी */
         .bg-overlay {
             position: fixed;
             top: 0;
@@ -30,7 +29,6 @@
             z-index: -1;
         }
 
-        /* मेन लेआउट कంటైనर */
         .app-container {
             width: 100%;
             min-height: 100vh;
@@ -64,33 +62,33 @@
             text-shadow: 0 2px 10px rgba(0,0,0,0.8);
         }
 
-        /* मिडल कंटेंट एरिया (प्लेलिस्ट और प्लेयर के लिए) */
         .player-wrapper {
             width: 100%;
             max-width: 480px;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 12px;
             margin-bottom: 10px;
         }
 
-        /* प्लेलिस्ट ड्रावर बॉक्स */
+        /* यहाँ बदलाव किया गया है ताकि बंद रहने पर कोई लाइन न दिखे */
         .playlist-drawer {
             width: 100%;
             background: rgba(15, 15, 25, 0.85);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 16px;
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.35s ease, padding 0.35s ease;
+            transition: max-height 0.35s ease, padding 0.35s ease, border 0.35s ease;
             box-shadow: 0 15px 35px rgba(0,0,0,0.8);
+            border: none; /* बंद रहने पर बॉर्डर हट जाएगी */
         }
 
         .playlist-drawer.open {
             max-height: 260px;
             padding: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.15); /* खुलने पर ही बॉर्डर दिखेगी */
         }
 
         .playlist-items {
@@ -116,7 +114,6 @@
             color: #ffcc00;
         }
 
-        /* बॉटम फ्लोटिंग प्लेयर पिल */
         .player-pill {
             width: 100%;
             background: rgba(20, 20, 30, 0.8);
@@ -240,14 +237,9 @@
         .playlist-items::-webkit-scrollbar { width: 4px; }
         .playlist-items::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 4px; }
 
-        /* डेस्कटॉप व्यू के लिए स्पेशल एडजेस्टमेंट */
         @media (min-width: 768px) {
-            .app-container {
-                padding: 40px;
-            }
-            .player-wrapper {
-                max-width: 520px;
-            }
+            .app-container { padding: 40px; }
+            .player-wrapper { max-width: 520px; }
         }
     </style>
 </head>
@@ -264,12 +256,10 @@
         </div>
 
         <div class="player-wrapper">
-            <!-- प्लेलिस्ट ड्रावर -->
             <div class="playlist-drawer" id="playlistDrawer">
                 <div class="playlist-items" id="playlistItems"></div>
             </div>
 
-            <!-- बॉटम प्लेयर पिल -->
             <div class="player-pill">
                 <div class="player-main">
                     <div class="song-info">
